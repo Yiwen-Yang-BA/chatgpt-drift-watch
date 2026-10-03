@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="对比基准与当前数据，查看字段、缺失率和分布如何变化。所有分箱与阈值清楚展示。"
+    />
+    <title>Drift Watch · AI 小工具</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/data.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand"><span class="logo">W</span>Drift Watch</div>
+        <div class="side-intro">
+          <div class="eyebrow">DATA & FINANCE STUDIO</div>
+          <div class="nav-item">数据分布对比</div>
+        </div>
+        <div class="side-note">
+          把一个想法，变成可以使用的结果。<br />轻量、专注，按你的节奏。
+        </div>
+        <div class="side-bottom">
+          <div class="eyebrow">CONNECTION</div>
+          <label
+            ><span class="sr-only" hidden>运行模式</span
+            ><select id="mode" aria-label="运行模式"></select
+          ></label>
+        </div>
+        <div class="side-footer">
+          DATA EDITION / 04<br />Built for a little more clarity.
+        </div>
+      </aside>
+      <main class="main">
+        <header class="topbar">
+          <span class="crumb">我的工作台 &nbsp; / &nbsp; 数据分布对比</span
+          ><span class="top-meta"
+            ><i class="dot"></i><span id="connection">正在连接…</span></span
+          >
+        </header>
+        <section class="hero">
+          <div class="eyebrow">WHEN THE DATA STARTS TO SHIFT.</div>
+          <h1>看见变化，核对原因。</h1>
+          <p class="description">
+            对比基准与当前数据，查看字段、缺失率和分布如何变化。所有分箱与阈值清楚展示。
+          </p>
+        </section>
+        <section class="grid2">
+          <section class="panel">
+            <div class="panel-head">
+              <h2>基准数据</h2>
+              <button id="sample" class="small">载入构造示例</button>
+            </div>
+            <textarea
+              id="reference"
+              rows="9"
+              maxlength="125000"
+              spellcheck="false"
+              aria-label="基准CSV"
+              placeholder="reference.csv · 第一行为字段名称"
+            ></textarea
+            ><input
+              id="reference-file"
+              class="upload-input"
+              type="file"
+              accept=".csv"
+              aria-label="导入基准CSV"
+            />
+          </section>
+          <section class="panel">
+            <div class="panel-head">
+              <h2>当前数据</h2>
+              <span class="chip">COMPARE TO REFERENCE</span>
+            </div>
+            <textarea
+              id="current"
+              rows="9"
+              maxlength="125000"
+              spellcheck="false"
+              aria-label="当前CSV"
+              placeholder="current.csv · 至少有一个共同字段"
+            ></textarea
+            ><input
+              id="current-file"
+              class="upload-input"
+              type="file"
+              accept=".csv"
+              aria-label="导入当前CSV"
+            />
+          </section>
+        </section>
+        <div class="toolbar" style="align-items: center; margin: 20px 0 28px">
+          <label style="display: flex; align-items: center; gap: 12px"
+            >数值分箱数<select id="bins" style="width: 80px">
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option selected>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+              <option>9</option>
+              <option>10</option>
+            </select></label
+          ><button id="compare" class="primary">比较数据分布 ↗</button
+          ><span class="hint" style="margin: 0"
+            >示例为人工构造。阈值只用于检查线索，不代表统计显著性。</span
+          >
+        </div>
+        <div id="metrics" class="metric-grid"></div>
+        <section class="panel data-panel">
+          <div class="result-title">
+            <h2>变化概览</h2>
+            <span class="chip">PSI · TV DISTANCE</span>
+          </div>
+          <p id="schema-changes" class="hint"></p>
+          <div id="overview" class="table-wrap">
+            <div class="empty">
+              <div class="symbol">⇄</div>
+              <h3>让两份数据对话</h3>
+              <p>比较共同字段，保留新增和移除字段的线索。</p>
+            </div>
+          </div>
+          <p id="warnings" class="warning-list"></p>
+        </section>
+        <section class="panel data-panel">
+          <div class="result-title">
+            <h2 id="field-title">字段分布</h2>
+            <span id="field-status" class="chip">SELECT A FIELD</span>
+          </div>
+          <div id="field-info"></div>
+          <div id="distribution" class="chart-wrap"></div>
+          <div id="bins-table" class="table-wrap"></div>
+        </section>
+        <section class="panel data-panel">
+          <h2>比较解读</h2>
+          <div id="meta" class="meta"></div>
+          <div id="insight" class="insight">
+            完成比较后，这里显示指标说明与可选 AI 解读。
+          </div>
+          <div id="exports" class="toolbar" hidden>
+            <button id="export-html" class="primary">导出 HTML 报告</button
+            ><button id="export-json" class="small">导出 JSON</button>
+          </div>
+        </section>
+        <footer class="footer">
+          <span>Drift Watch · 独立轻量实现</span
+          ><span
+            >灵感来自
+            <a
+              href="https://github.com/evidentlyai/evidently"
+              target="_blank"
+              rel="noopener noreferrer"
+              >evidentlyai/evidently</a
+            >
+            &nbsp; / &nbsp; 04 OF 10</span
+          >
+        </footer>
+      </main>
+    </div>
+    <div id="toast" role="status" aria-live="polite" hidden></div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
